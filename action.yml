@@ -34,6 +34,8 @@ runs:
         git branch --all
         git config --list
         git checkout ${{ inputs.branch }}
-        git merge --ff-only upstream/${{ inputs.upstream-branch }}
-        git push 
+        git merge --no-edit upstream/${{ inputs.upstream-branch }}
+        CONFLICTS=$(git ls-files -u | wc -l)
+        [[ "$CONFLICTS" -gt 0 ]] || exit 2
+        git push
       shell: bash
