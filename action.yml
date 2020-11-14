@@ -15,6 +15,12 @@ inputs:
   branch:
     description: 'Branch to merge to. For example, master'
     default: 'master'
+  username:
+    description: 'User name to use on the merge commit if ff is not possible'
+    default: 'wlanpi'
+  useremail:
+    description: 'User name to use on the merge commit if ff is not possible'
+    default: 'wlanpi@users.noreply.github.com'
   token:
     description: >
       Personal access token (PAT) used to fetch the repository. The PAT is configured
@@ -34,8 +40,8 @@ runs:
         git branch --all
         git config --list
         git checkout ${{ inputs.branch }}
-        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ inputs.useremail }}"
+        git config --global user.name "${{ inputs.username }}"
         git merge --ff --no-edit upstream/${{ inputs.upstream-branch }}
         CONFLICTS=$(git ls-files -u | wc -l)
         [[ "$CONFLICTS" -gt 0 ]] && exit 2
